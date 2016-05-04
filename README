@@ -75,3 +75,7 @@ KNOWN BUGS for extstorage
 - gnt-backup export doesn't work because snapshoot hooks are not available
 - gnt-instance move works from somewhere to zfs, but not from zfs to somewhere
 
+
+NEW FEATURES by hostingnuggets
+
+- logging (currently only command startup for dev and test purposes)

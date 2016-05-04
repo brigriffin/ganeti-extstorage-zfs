@@ -2,5 +2,7 @@
 
 . /usr/share/ganeti/extstorage/zfs/defaults.sh
 
+log_start
+
 test -e /dev/zvol/$EXTP_ZFS/$VOL_NAME || \
 zfs create -V ${VOL_SIZE}M $EXTP_CREATE $EXTP_ZFS/$VOL_NAME

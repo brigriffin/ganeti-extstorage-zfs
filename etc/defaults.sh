@@ -7,6 +7,12 @@ dir=/usr/share/ganeti/extstorage/zfs/
 host_config=$dir/etc/`hostname -s`.sh
 test -e $host_config && . $host_config
 
+# when enabled debugging logs to debug.log in $LOG_DIR
+test -z "$DEBUG" && DEBUG="0"
+
+# log directory (used by debugging)
+test -z "$LOG_DIR" && LOG_DIR="/var/log/ganeti/extstorage"
+
 # parameters for zfs create, by default
 # -s	sparse
 # -b 4k	block size sutable for ext4 filesystem which ganeti uses
@@ -29,4 +35,15 @@ export VOL_NAME
 
 zfs_get() {
 zfs get $1 -o value -p -H $EXTP_ZFS/$VOL_NAME
+}
+
+log_start() {
+	if [ $DEBUG -eq 1 ] && [ -w "$LOG_DIR" ]; then
+		echo -n "`date '+%d-%m-%Y %H:%M:%S'` - [`basename $0`]: Starting command" >> $LOG_DIR/zfs-debug.log
+		if [ -n "$*" ]; then
+			echo " (parameters: $*)" >> $LOG_DIR/zfs-debug.log
+		else
+			echo "" >> $LOG_DIR/zfs-debug.log
+		fi
+	fi
 }

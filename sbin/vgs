@@ -2,6 +2,8 @@
 
 . /usr/share/ganeti/extstorage/zfs/defaults.sh
 
+log_start $*
+
 # gnt-node list-storage
 # vgs --noheadings --units=m --nosuffix --separator '|' --options vg_name,vg_size,vg_free
 if echo $* | grep -q vg_name,vg_size,vg_free ; then

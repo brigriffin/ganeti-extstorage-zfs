@@ -2,6 +2,8 @@
 
 . /usr/share/ganeti/extstorage/zfs/defaults.sh
 
+log_start
+
 zfs set ganeti:metadata="$VOL_METADATA" $EXTP_ZFS/$VOL_NAME
 # FIXME remove duplication?
 

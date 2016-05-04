@@ -2,6 +2,8 @@
 
 . /usr/share/ganeti/extstorage/zfs/defaults.sh
 
+log_start $*
+
 # lvremove -f ffzgvg/3e6746a9-cb99-4584-a219-af7e4b5cb5f5.disk0_data.snap
 
 if echo $* | grep -q $EXTP_VG ; then

@@ -2,6 +2,8 @@
 
 . /usr/share/ganeti/extstorage/zfs/defaults.sh
 
+log_start
+
 test -e /dev/zvol/$EXTP_ZFS/$VOL_NAME || exit 0
 
 # remove snapshot flag on origin

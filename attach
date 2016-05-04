@@ -2,6 +2,7 @@
 
 . /usr/share/ganeti/extstorage/zfs/defaults.sh
 
+log_start
 
 dev=`readlink --canonicalize /dev/zvol/$EXTP_ZFS/$VOL_NAME`
 ln -svf $dev /dev/$EXTP_VG/$VOL_NAME >&2
