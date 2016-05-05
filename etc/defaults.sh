@@ -47,3 +47,9 @@ log_start() {
 		fi
 	fi
 }
+
+log_event() {
+	if [ $DEBUG -eq 1 ] && [ -w "$LOG_DIR" ]; then
+		echo "`date '+%d-%m-%Y %H:%M:%S'` - [`basename $0`]: $1" >> $LOG_DIR/zfs-debug.log
+	fi
+}
