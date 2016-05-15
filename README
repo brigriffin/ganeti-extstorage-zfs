@@ -76,6 +76,10 @@ KNOWN BUGS for extstorage
 - gnt-instance move works from somewhere to zfs, but not from zfs to somewhere
 
 
-NEW FEATURES by hostingnuggets
+NEW FEATURES AND FIXES by hostingnuggets
 
 - logging (currently only command startup for dev and test purposes)
+- fixed symbolic links handling of LVM emulation when renaming volumes so that
+  the replace-disks and activate-disks commands of gnt-instance are usable
+  (passed ganeti burnin test with following parameters: -o debootstrap+default
+  --disk-size=1G -p -v inst{1..5})
