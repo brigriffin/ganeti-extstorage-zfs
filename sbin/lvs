@@ -30,10 +30,29 @@ elif echo $* | grep -q lv_name,lv_size,devices,vg_name ; then
 	awk '{ print "  "$1"|" $2 / 1024 / 1024 "|zfs|'$EXTP_VG'" }'
 	/sbin/lvm lvs $* 2>/dev/null || exit 0 # local, might fail
 
-# gnt-instance modify -t drbd -n box02 zfs
+# gnt-cluster verify | gnt-instance add ... (Ganeti versions >=2.16)
+# lvs --noheadings '--separator=|' --units=k --nosuffix -ovg_name,lv_name,lv_attr,lv_kernel_major,lv_kernel_minor,vg_extent_size,stripes,devices
+elif echo $* | grep -q vg_name,lv_name,lv_attr,lv_kernel_major,lv_kernel_minor,vg_extent_size,stripes,devices ; then
+	OIFS=$IFS
+	IFS="
+"
+	for VOL in $(zfs list -o name,volsize,lv:s,lv:a -t volume -r $EXTP_ZFS -H -p | sed "s:$EXTP_ZFS/*::"); do
+		LV_NAME=`echo -n $VOL | cut -f1`
+		LV_SIZE=`echo -n $VOL | cut -f2`
+		SIZE=`awk "BEGIN {print $LV_SIZE / 1024 / 1024}"`
+		LV_A=`echo -n $VOL | cut -f3`
+		LV_S=`echo -n $VOL | cut -f3`
+		ZVOL_DEV=`readlink -f /dev/zvol/$EXTP_ZFS/$LV_NAME`
+		LV_K_MAJ=`ls -l $ZVOL_DEV|sed 's/,//'|cut -d' ' -f5`
+		LV_K_MIN=`ls -l $ZVOL_DEV|sed 's/,//'|cut -d' ' -f6`
+		NUMBER=`awk "BEGIN {print $LV_K_MIN * 1280 + $LV_K_MIN}"`
+		echo "  ${EXTP_VG}|${LV_NAME}|${LV_A}wi-a${LV_S}--|${LV_K_MAJ}|${LV_K_MIN}|${SIZE}|1|${ZVOL_DEV}(${NUMBER})"
+	done
+	IFS=$OIFS
+
+# gnt-instance modify -t drbd -n box02 zfs | gnt-cluster verify | gnt-instance add ... (Ganeti versions <2.16)
 # lvs --noheadings '--separator=|' --units=k --nosuffix -olv_attr,lv_kernel_major,lv_kernel_minor,vg_extent_size,stripes,devices /dev/ffzgvg/c72d9ea7-f396-4104-b4ee-8b613da32051.disk1
 elif echo $* | grep -q lv_attr,lv_kernel_major,lv_kernel_minor,vg_extent_size,stripes,devices ; then
-
 	VOL $5 $6
 	a=$(zfs_get lv:a)
 	s=$(zfs_get lv:s)
